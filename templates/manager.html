@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block body %}
+<div class="card"><h2>Team leave &ndash; {{ user.name }}</h2>
+<p class="muted">Leave requests from people who report to you.</p></div>
+<div class="card"><table><tr><th>#</th><th>Employee</th><th>Type</th><th>Dates</th><th>Days</th><th>Reason</th><th>Balance CL/SL/EL</th><th>Status / action</th></tr>
+{% for r in reqs %}<tr><td>{{ r.id }}</td><td><a href="/profile/{{ r.emp_id }}">{{ r.full_name }}</a></td><td>{{ r.leave_type }}</td>
+<td>{{ r.start_date }} &rarr; {{ r.end_date }}</td><td>{{ r.days }}</td><td>{{ r.reason }}</td>
+<td>{{ r.cl_balance|round(1) }} / {{ r.sl_balance|round(1) }} / {{ r.el_balance|round(1) }}</td>
+<td>{% if r.status == 'Pending' %}<form method="post" action="/leave/decide">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<input type="hidden" name="request_id" value="{{ r.id }}">
+<button class="btn-sm" name="decision" value="Approved">Approve</button>
+<button class="btn-sm grey" name="decision" value="Rejected">Reject</button></form>
+{% else %}<span class="{{ r.status }}">{{ r.status }}</span>{% endif %}</td></tr>
+{% else %}<tr><td colspan="8" class="muted">No requests from your team</td></tr>{% endfor %}</table></div>{% endblock %}

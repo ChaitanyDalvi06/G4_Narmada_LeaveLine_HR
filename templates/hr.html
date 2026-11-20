@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% block body %}
+<div class="card"><h2>HR desk &ndash; {{ user.name }}</h2></div>
+<div class="card"><h3>All leave requests</h3>
+<table><tr><th>#</th><th>Employee</th><th>Type</th><th>Dates</th><th>Days</th><th>Status</th><th>Decided by</th><th>Action</th></tr>
+{% for r in reqs %}<tr><td>{{ r.id }}</td><td>{{ r.full_name }}</td><td>{{ r.leave_type }}</td><td>{{ r.start_date }} &rarr; {{ r.end_date }}</td>
+<td>{{ r.days }}</td><td class="{{ r.status }}">{{ r.status }}</td><td>{{ r.decider or '' }}</td>
+<td>{% if r.status == 'Pending' %}<form method="post" action="/leave/decide">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<input type="hidden" name="request_id" value="{{ r.id }}">
+<button class="btn-sm" name="decision" value="Approved">Approve</button> <button class="btn-sm grey" name="decision" value="Rejected">Reject</button></form>{% endif %}</td></tr>{% endfor %}</table></div>
+<div class="card"><h3>Employees</h3>
+<table><tr><th>ID</th><th>Name</th><th>Role</th><th>Dept</th><th>Manager</th><th>CL</th><th>SL</th><th>EL</th></tr>
+{% for e in emps %}<tr><td>{{ e.id }}</td><td><a href="/profile/{{ e.id }}">{{ e.full_name }}</a></td><td>{{ e.role }}</td><td>{{ e.dept }}</td><td>{{ e.manager or '' }}</td>
+<td>{{ e.cl_balance|round(1) }}</td><td>{{ e.sl_balance|round(1) }}</td><td>{{ e.el_balance|round(1) }}</td></tr>{% endfor %}</table></div>
+<div class="card"><h3>Add a new joiner</h3>
+<form method="post" action="/hr/add_employee">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<div class="row"><div><label>Full name</label><input name="full_name" required></div><div><label>Username</label><input name="username" required></div><div><label>Temporary password</label><input name="password" required></div></div>
+<div class="row"><div><label>Role</label><select name="role"><option>employee</option><option>manager</option><option>hr</option></select></div><div><label>Department</label><input name="dept"></div>
+<div><label>Manager</label><select name="manager_id"><option value="">-</option>{% for e in emps if e.role != 'employee' %}<option value="{{ e.id }}">{{ e.full_name }}</option>{% endfor %}</select></div></div>
+<div class="row"><div><label>Mobile</label><input name="phone"></div><div><label>PAN</label><input name="pan"></div><div><label>Monthly salary (&#8377;)</label><input name="monthly_salary" type="number"></div></div>
+<button>Create account</button></form></div>{% endblock %}

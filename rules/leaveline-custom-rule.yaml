@@ -1,0 +1,29 @@
+rules:
+  - id: leaveline-raw-sql-concatenation
+    message: "CRITICAL: Detected SQL query constructed via string concatenation or % formatting. Use parameterized queries with '?' placeholders instead to prevent SQL injection."
+    severity: ERROR
+    languages: [python]
+    metadata:
+      cwe: "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      owasp: "A05:2025 - Injection"
+    patterns:
+      - pattern-either:
+          - pattern: $DB.execute("..." % ..., ...)
+          - pattern: $DB.execute("..." + ..., ...)
+          - pattern: $DB.execute(f"...", ...)
+          - pattern: |
+              $Q = ... + ...
+              ...
+              $DB.execute($Q, ...)
+          - pattern: |
+              $Q = ... + ...
+              ...
+              $DB.execute($Q).$FETCH(...)
+          - pattern: |
+              $Q = ... % ...
+              ...
+              $DB.execute($Q, ...)
+          - pattern: |
+              $Q = ... % ...
+              ...
+              $DB.execute($Q).$FETCH(...)

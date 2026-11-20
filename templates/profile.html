@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block body %}
+<div class="card" style="max-width:620px"><h2>Employee profile &ndash; {{ emp.full_name }}</h2>
+<table>
+<tr><th>Employee ID</th><td>{{ emp.id }}</td></tr>
+<tr><th>Department</th><td>{{ emp.dept }}</td></tr>
+<tr><th>Role</th><td>{{ emp.role }}</td></tr>
+<tr><th>Reports to</th><td>{{ emp.manager or '-' }}</td></tr>
+<tr><th>Mobile</th><td>{{ emp.phone }}</td></tr>
+<tr><th>PAN</th><td>{{ emp.pan }}</td></tr>
+<tr><th>Monthly salary</th><td>&#8377; {{ emp.monthly_salary }}</td></tr>
+<tr><th>Leave balance CL / SL / EL</th><td>{{ emp.cl_balance|round(1) }} / {{ emp.sl_balance|round(1) }} / {{ emp.el_balance|round(1) }}</td></tr>
+</table><p><a href="/">&larr; Back</a></p></div>{% endblock %}

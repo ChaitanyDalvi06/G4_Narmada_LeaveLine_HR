@@ -1,0 +1,23 @@
+{% extends "base.html" %}{% block body %}
+<div class="card"><h2>Hello, {{ me.full_name }}</h2>
+<p class="muted">{{ me.dept }} &middot; <a href="/profile/{{ me.id }}">View my profile</a></p>
+<div class="bal"><div><b>{{ me.cl_balance|round(1) }}</b>Casual leave</div><div><b>{{ me.sl_balance|round(1) }}</b>Sick leave</div><div><b>{{ me.el_balance|round(1) }}</b>Earned leave</div></div></div>
+<div class="card"><h3>Apply for leave</h3>
+<form method="post" action="/apply">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Leave type</label><select name="leave_type"><option value="CL">Casual leave (CL)</option><option value="SL">Sick leave (SL)</option><option value="EL">Earned leave (EL)</option></select>
+<div class="row"><div><label>From</label><input type="date" name="start_date" id="sd" value="{{ today }}" required></div>
+<div><label>To</label><input type="date" name="end_date" id="ed" value="{{ today }}" required></div>
+<div><label>Number of days</label><input type="number" name="days" id="days" value="1" step="0.5" min="0.5" required></div></div>
+<label>Reason</label><textarea name="reason" rows="2"></textarea>
+<button>Submit for approval</button></form></div>
+<div class="card"><h3>My leave requests</h3>
+<table><tr><th>#</th><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Reason</th><th>Status</th></tr>
+{% for r in reqs %}<tr><td>{{ r.id }}</td><td>{{ r.leave_type }}</td><td>{{ r.start_date }}</td><td>{{ r.end_date }}</td><td>{{ r.days }}</td><td>{{ r.reason }}</td><td class="{{ r.status }}">{{ r.status }}</td></tr>
+{% else %}<tr><td colspan="7" class="muted">No requests yet</td></tr>{% endfor %}</table></div>
+<script>
+// Work out the number of days from the dates (browser-side helper)
+function calc(){var s=new Date(document.getElementById('sd').value),e=new Date(document.getElementById('ed').value);
+var d=Math.round((e-s)/86400000)+1; if(d>0){document.getElementById('days').value=d;}}
+document.getElementById('sd').onchange=calc;document.getElementById('ed').onchange=calc;
+</script>{% endblock %}
