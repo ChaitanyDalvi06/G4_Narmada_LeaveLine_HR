@@ -1,1 +1,2 @@
 Priority,Score,Finding_ID,Title,Tools,CWE,Severity,Confidence,Business_Weight,Location,Instances,Remediation
+P1,8.00,REM-01,CRITICAL: Unescaped user input or direct string interpolation rendered via Jinja2 template engine.,Semgrep,CWE-79,HIGH,HIGH,1.0,app.py:415,1,Apply secure coding principles and defense-in-depth security headers.
