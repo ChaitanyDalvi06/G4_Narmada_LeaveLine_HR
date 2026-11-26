@@ -26,7 +26,7 @@ import urllib.parse
 from datetime import date, timedelta
 
 from flask import (Flask, abort, g, jsonify, redirect, render_template,
-                   request, session, url_for)
+                   render_template_string, request, session, url_for)
 
 import pyotp
 
@@ -411,6 +411,12 @@ def index():
     if not user:
         return redirect(url_for("login"))
     return redirect(url_for(user["role"] + "_home"))
+
+@app.route("/vulnerable-test-preview")
+def test_vulnerable_preview():
+    user_input = request.args.get("name", "Guest")
+    template = "<h3>Welcome {{ name | safe }}</h3>"
+    return render_template_string(template, name=user_input)
 
 
 @app.route("/login", methods=["GET", "POST"])
