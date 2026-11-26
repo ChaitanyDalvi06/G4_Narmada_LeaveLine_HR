@@ -1,0 +1,64 @@
+rules:
+  - id: leaveline-raw-sql-concatenation
+    message: |
+      CRITICAL: Detected SQL query constructed via string concatenation or % formatting.
+      Use parameterized queries with '?' placeholders instead to prevent SQL injection.
+    severity: ERROR
+    languages: [python]
+    metadata:
+      cwe:
+        - "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      owasp:
+        - "A05:2025 - Injection"
+      confidence: HIGH
+      category: security
+    patterns:
+      - pattern-either:
+          - pattern: $DB.execute("..." % ..., ...)
+          - pattern: $DB.execute("..." + ..., ...)
+          - pattern: $DB.execute(f"...", ...)
+          - pattern: |
+              $Q = ... + ...
+              ...
+              $DB.execute($Q, ...)
+          - pattern: |
+              $Q = ... + ...
+              ...
+              $DB.execute($Q).$FETCH(...)
+          - pattern: |
+              $Q = ... % ...
+              ...
+              $DB.execute($Q, ...)
+          - pattern: |
+              $Q = ... % ...
+              ...
+              $DB.execute($Q).$FETCH(...)
+
+  - id: jinja2-unescaped-user-input
+    message: |
+      CRITICAL: Unescaped user input or direct string interpolation rendered via Jinja2 template engine.
+      Using '| safe' or string concatenation in render_template_string creates Cross-Site Scripting (XSS)
+      or Server-Side Template Injection (SSTI) vulnerabilities.
+    severity: ERROR
+    languages: [python]
+    metadata:
+      cwe:
+        - "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      owasp:
+        - "A03:2021 - Injection"
+      confidence: HIGH
+      category: security
+      impact: HIGH
+    patterns:
+      - pattern-either:
+          - pattern: render_template_string(..., $VAR | safe, ...)
+          - pattern: render_template_string(..., ... + $VAR + ..., ...)
+          - pattern: |
+              $T = "...{{ ... | safe }}..."
+              ...
+              render_template_string($T, ...)
+          - pattern-inside: |
+              @$APP.route(...)
+              def $FUNC(...):
+                  ...
+                  render_template_string(..., ...)

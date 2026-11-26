@@ -613,6 +613,12 @@ def apply_leave():
         e_date = date.fromisoformat(end_date_str)
         if e_date < s_date:
             return render_template("error.html", msg="End date cannot be earlier than start date"), 400
+        cal_days = (e_date - s_date).days + 1
+        if abs(days - cal_days) > 0.001:
+            return render_template(
+                "error.html",
+                msg=f"Date range mismatch: Selected date range ({start_date_str} to {end_date_str}) corresponds to {cal_days} day(s), but requested days is {days}"
+            ), 400
     except ValueError:
         return render_template("error.html", msg="Invalid date format. Expected YYYY-MM-DD"), 400
 

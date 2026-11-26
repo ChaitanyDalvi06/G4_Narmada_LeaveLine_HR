@@ -1,0 +1,83 @@
+{
+  "tool": "G4 Narmada LeaveLine - Leave Anomaly Auditor",
+  "version": "1.0.0",
+  "timestamp": "2026-11-26T13:29:36.999878",
+  "target_database": "/Users/chaitanyadalvi/Desktop/G4_Narmada_LeaveLine/tools/leave_original_vulnerable.db",
+  "execution_duration_ms": 0.68,
+  "exit_code": 1,
+  "status": "FAIL",
+  "statistics": {
+    "total_users_scanned": 6,
+    "total_requests_scanned": 5,
+    "total_anomalies": 5
+  },
+  "summary": {
+    "self_approvals_count": 1,
+    "out_of_team_approvals_count": 2,
+    "date_range_mismatches_count": 1,
+    "negative_balances_count": 1
+  },
+  "findings": {
+    "self_approvals": [
+      {
+        "type": "SELF_APPROVAL",
+        "request_id": 1,
+        "employee": "Anil Desai (anil, ID:2)",
+        "approver": "Anil Desai (anil, ID:2)",
+        "leave_type": "CL",
+        "days": 2.0,
+        "dates": "2026-10-15 to 2026-10-16",
+        "description": "Employee/Manager 'anil' approved their own leave request (Request #1)."
+      }
+    ],
+    "out_of_team_approvals": [
+      {
+        "type": "OUT_OF_TEAM_APPROVAL",
+        "request_id": 1,
+        "employee": "Anil Desai (anil, Dept:Production)",
+        "approver": "Anil Desai (anil, Dept:Production)",
+        "assigned_manager": "Meera Trivedi (ID:1)",
+        "leave_type": "CL",
+        "days": 2.0,
+        "dates": "2026-10-15 to 2026-10-16",
+        "description": "Manager 'anil' approved Request #1 for 'anil' who belongs to 'Production' and reports to 'Meera Trivedi'."
+      },
+      {
+        "type": "OUT_OF_TEAM_APPROVAL",
+        "request_id": 2,
+        "employee": "Deepak Parmar (deepak, Dept:Production)",
+        "approver": "Farah Sheikh (farah, Dept:Quality)",
+        "assigned_manager": "Anil Desai (ID:2)",
+        "leave_type": "SL",
+        "days": 3.0,
+        "dates": "2026-10-18 to 2026-10-20",
+        "description": "Manager 'farah' approved Request #2 for 'deepak' who belongs to 'Production' and reports to 'Anil Desai'."
+      }
+    ],
+    "date_range_mismatches": [
+      {
+        "type": "DAYS_RANGE_MISMATCH",
+        "request_id": 3,
+        "employee": "Sunita Rathod (sunita)",
+        "dates": "2026-11-20 to 2026-11-20",
+        "recorded_days": 8.0,
+        "expected_days": 1,
+        "status": "Pending",
+        "description": "Date span discrepancy in Request #3: 2026-11-20 to 2026-11-20 is 1 calendar day(s), but recorded days = 8.0."
+      }
+    ],
+    "negative_balances": [
+      {
+        "type": "NEGATIVE_BALANCE",
+        "user_id": 4,
+        "username": "deepak",
+        "full_name": "Deepak Parmar",
+        "role": "employee",
+        "dept": "Production",
+        "balances": "CL=-2.0, SL=8.0, EL=12.0",
+        "deficits": "CL: -2.0",
+        "description": "Employee 'deepak' has negative balance: CL: -2.0."
+      }
+    ]
+  }
+}
